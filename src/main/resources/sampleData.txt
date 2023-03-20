@@ -1,0 +1,86 @@
+#Creating Gateway node
+CREATE (a:Gateway { name : "gateway1" }),(b:Gateway { name : "gateway2" }) RETURN a,b
+
+CREATE CONSTRAINT ON (a:Gateway) ASSERT a.name IS UNIQUE
+
+#Creating Sensor nodes
+CREATE
+(a:Sensor { name : "sensor1" , types: ["temperature", "humidity", "electricity"] }),
+(b:Sensor { name : "sensor2" , types: ["temperature", "humidity"] }),
+(c:Sensor { name : "sensor3" , types: ["temperature", "electricity"] }),
+(d:Sensor { name : "sensor4" , types: ["electricity"] })
+RETURN a,b,c,d
+
+CREATE CONSTRAINT ON (a:Sensor) ASSERT a.name IS UNIQUE
+
+#Relationships
+
+MATCH (a:Sensor),(b:Gateway)
+WHERE a.Name = "sensor1" AND b.Name = "gateway1"
+CREATE (a)-[r:CONNECTED_TO ]->(b)
+RETURN r
+
+MATCH (a:Sensor),(b:Gateway)
+WHERE a.Name = "sensor2" AND b.Name = "gateway1"
+CREATE (a)-[r:CONNECTED_TO ]->(b)
+RETURN r
+
+MATCH (a:Sensor),(b:Gateway)
+WHERE a.Name = "sensor3" AND b.Name = "gateway2"
+CREATE (a)-[r:CONNECTED_TO ]->(b)
+RETURN r
+
+MATCH (a:Sensor),(b:Gateway)
+WHERE a.Name = "sensor4" AND b.Name = "gateway2"
+CREATE (a)-[r:CONNECTED_TO ]->(b)
+RETURN r
+
+View or Delete
+MATCH (sensor:Sensor)-[r:CONNECTED_TO]->(gateway:Gateway)
+WHERE sensor.name = "sensor2" AND gateway.name = "gateway2" Delete r
+
+
+#Sample queries for use cases
+1. As a user I'd like to query for all the existing sensors.
+Match(i:Sensor) Return i
+
+
+As a user I'd like to query for all gateways
+Match(i:Gateway) Return i
+
+As a user I'd like to query all sensors assigned to an existing gateway
+Match(g:Gateway {name: "gateway2"})<-[:CONNECTED_TO]-(s:Sensor) Return s
+
+As a user I'd like to create a new sensor
+
+As a user I'd like to create a new gateway
+
+As a user I'd like to assign a sensor to a given gateway.
+
+As a user I'd like to query for sensors of a certain type.
+Match(s:Sensor) Where "electricity" IN s.types Return s
+
+
+As a user I'd like to query for a gateway that has electrical sensors assigned to it.
+Match(g:Gateway)<-[:CONNECTED_TO]-(s:Sensor) where "electricity" In s.types Return g
+
+
+
+
+
+To find the relationship between node and node type
+MATCH (n:Sensor {Name: "sensor1"})-[r]-(g:Gateway)
+RETURN r
+
+MATCH (s:Sensor {Name: "sensor1"})-[r:CONNECTED_TO]-(g:Gateway)
+RETURN count(r) > 0
+
+MATCH (s:Sensor {Name: "sensor3"})
+OPTIONAL MATCH (s)-[:CONNECTED_TO]->(g:Gateway)
+WITH s, collect(g) as gs
+WHERE size(gs) = 0
+MERGE (g:Gateway {Name: "Gateway1"})
+MERGE (s)-[r:CONNECTED_TO]->(g)
+ON CREATE SET r.timestamp = timestamp()
+RETURN r
+

@@ -1,0 +1,76 @@
+1.  As a user I'd like to query for all the existing sensors.
+    Request Method: GET,
+    No validations required
+    200, 500
+
+2.  As a user I'd like to query for all gateways
+    Request Method: GET,
+    No validation required
+    200, 500
+
+3.  As a user I'd like to query all sensors assigned to an existing gateway
+
+    Request Body: POST
+    {
+     gateway: ""
+    }
+
+    Validations:
+        1. Check if gateway is present, if not throw response text "gateway is wrong or not present" - response code 404.
+
+    200, 400, 500, 404
+
+4.  As a user I'd like to create a new sensor
+
+    Request Body: POST
+    {
+     sensor: ""
+     types: ["", "", ""]
+    }
+
+    Validations:
+        1. Check if sensor is already exists, if yes then throw "Sensor already exists, choose different name"
+
+    201, 400, 500, 409
+
+5.  As a user I'd like to create a new gateway
+
+    Request Body: POST
+    {
+     gateway: ""
+    }
+
+    Validations:
+        1. Check if gateway is already exists, if yes then throw "Gateway already exists, choose different name"
+
+    201, 400, 500, 409
+
+6.  As a user I'd like to assign a sensor to a given gateway.
+
+    Request Body: POST
+    {
+     sensor: ""
+     gateway: ""
+    }
+
+    Validations:
+        1. Check if gateway is present, if not throw response text "gateway is wrong or not present" - response code 404.
+        2. Check if Sensor is present, if not throw response text "Sensor is wrong or not present" - response code 404.
+        3. Check if Sensor is already assigned to Gateway, if yes throw "Sensor can only be assigned to one gateway"
+
+    201, 400, 409, 500, 404
+
+7.  As a user I'd like to query for sensors of a certain type.
+
+    Request Body: GET
+    PathVariable : /sensorType
+
+    Validations:
+        1. Check if Sensor is present, if not throw response text "Sensor is wrong or not present" - response code 404.
+
+    200, 400, 500
+
+8. As a user I'd like to query for a gateway that has electrical sensors assigned to it.
+   Request Body: GET
+
+    200, 400, 500
