@@ -5,12 +5,13 @@
 - Java
 - Spring Boot
 - Spring Data
+- Spring AOP
 - Maven
 - Neo4J
 
 #Description
 
-Our company is rolling out a new backend service that will allow developers to create Sensors and Gateways in our system. 
+EnergyHUB company is rolling out a new backend service that will allow developers to create Sensors and Gateways in the system. 
 A sensor can only be connected to one Gateway at a time, while a Gateway can have N sensors connected to it.
 
 A relationship of type CONNECTED_TO should be created between sensor and gateway when a sensor is assigned to a given gateway.
@@ -18,8 +19,6 @@ A relationship of type CONNECTED_TO should be created between sensor and gateway
 Sensors should have a type attribute. And a sensor can have multiple types assigned to it. 
 
 Some example of sensor types could be temperature, humidity, electricity.
-
-Try to complete the user stories below as best you can, and feel free to add in any features you'd like to see that may not be detailed here. The stories are purposefully vague and open to interpretation.
 
 ### User Stories:
 
